@@ -1,5 +1,5 @@
 <template>
-  <div class="home"></div>
+  <div class="home">你没权限</div>
 </template>
 
 <script lang="ts"></script>
