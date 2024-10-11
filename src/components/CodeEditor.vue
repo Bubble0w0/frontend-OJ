@@ -1,18 +1,32 @@
 <template>
-  <div id="code-editor" ref="codeEditorRef" style="min-height: 400px" />
+  <div
+    id="code-editor"
+    ref="codeEditorRef"
+    style="min-height: 400px; height: 70vh"
+  />
   <!--  <a-button @click="fillValue">填充值</a-button>-->
 </template>
 <script setup lang="ts">
 import * as monaco from "monaco-editor";
-import { defineProps, onMounted, ref, toRaw, toRefs, withDefaults } from "vue";
+import {
+  defineProps,
+  onMounted,
+  ref,
+  toRaw,
+  toRefs,
+  watch,
+  withDefaults,
+} from "vue";
 
 interface Props {
   value: string;
+  language?: string;
   handleChange: (value: string) => void;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   value: () => "",
+  language: () => "java",
   handleChange: (v: string) => {
     console.log(v);
   },
@@ -21,13 +35,30 @@ const props = withDefaults(defineProps<Props>(), {
 const codeEditorRef = ref();
 const codeEditor = ref();
 
-const fillValue = () => {
-  if (!codeEditor.value) {
-    return;
+// const fillValue = () => {
+//   if (!codeEditor.value) {
+//     return;
+//   }
+//   // 改变值
+//   toRaw(codeEditor.value).setValue("新的值");
+// };
+
+watch(
+  () => props.language,
+  () => {
+    codeEditor.value = monaco.editor.create(codeEditorRef.value, {
+      value: props.value,
+      language: props.language,
+      automaticLayout: true,
+      colorDecorators: true,
+      minimap: {
+        enabled: true,
+      },
+      readOnly: false,
+      theme: "vs-dark",
+    });
   }
-  // 改变值
-  toRaw(codeEditor.value).setValue("新的值");
-};
+);
 
 onMounted(() => {
   if (!codeEditorRef.value) {
@@ -35,7 +66,7 @@ onMounted(() => {
   }
   codeEditor.value = monaco.editor.create(codeEditorRef.value, {
     value: props.value,
-    language: "java",
+    language: props.language,
     automaticLayout: true,
     colorDecorators: true,
     minimap: {
