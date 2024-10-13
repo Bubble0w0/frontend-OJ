@@ -17,6 +17,7 @@ import {
   watch,
   withDefaults,
 } from "vue";
+import { editor } from "monaco-editor";
 
 interface Props {
   value: string;
@@ -46,17 +47,12 @@ const codeEditor = ref();
 watch(
   () => props.language,
   () => {
-    codeEditor.value = monaco.editor.create(codeEditorRef.value, {
-      value: props.value,
-      language: props.language,
-      automaticLayout: true,
-      colorDecorators: true,
-      minimap: {
-        enabled: true,
-      },
-      readOnly: false,
-      theme: "vs-dark",
-    });
+    if (codeEditor.value) {
+      monaco.editor.setModelLanguage(
+        toRaw(codeEditor.value).getModel(),
+        props.language
+      );
+    }
   }
 );
 
