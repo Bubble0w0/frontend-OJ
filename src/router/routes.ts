@@ -40,7 +40,7 @@ export const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/question_submit",
-    name: "浏览题目",
+    name: "浏览题目提交",
     component: QuestionSubmitView,
   },
   {
